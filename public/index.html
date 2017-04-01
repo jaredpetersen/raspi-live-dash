@@ -1,0 +1,14 @@
+<html>
+  <body>
+    <video id=camera-1 width=640 height=360 class="video-js vjs-default-skin" controls>
+      <source src="http://some-ip-address:8080/camera/livestream.m3u8" type="application/x-mpegURL">
+    </video>
+    <link href="assets/video-js-5.19.1/video-js.css" rel="stylesheet">
+    <script src="assets/video-js-5.19.1/video.js"></script>
+    <script src="assets/video-contrib-hls-5.3.3/videojs-contrib-hls.min.js"></script>
+    <script>
+      var player = videojs('camera-1');
+      player.play();
+    </script>
+  </body>
+</html>
