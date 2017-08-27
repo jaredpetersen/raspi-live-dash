@@ -1,14 +1,47 @@
 <html>
   <body>
-    <video id=camera-1 width=640 height=360 class="video-js vjs-default-skin" controls>
-      <source src="http://some-ip-address:8080/camera/livestream.m3u8" type="application/x-mpegURL">
-    </video>
-    <link href="assets/video-js-5.19.1/video-js.css" rel="stylesheet">
-    <script src="assets/video-js-5.19.1/video.js"></script>
-    <script src="assets/video-contrib-hls-5.3.3/videojs-contrib-hls.min.js"></script>
-    <script>
-      var player = videojs('camera-1');
-      player.play();
-    </script>
+    <h2>Login</h2>
+    <p id="error" style="color: red"></p>
+    <form>
+      <input type="text" id="username" name="username" placeholder="username"><br>
+      <input type="password" id="password" name="password" placeholder="password"><br>
+      <input type="button" value="Login" onClick="login()">
+    </form>
   </body>
+  <script src="https://cdn.jsdelivr.net/js-cookie/2.2.0/js.cookie.js"></script>
+  <script>
+    function login() {
+      var username = document.getElementById("username").value;
+      var password = document.getElementById("password").value;
+
+      // Make the request for the token
+      var xhr = new XMLHttpRequest();
+      var url = "http://localhost:3000/authenticate";
+      xhr.open("POST", url, true);
+      xhr.setRequestHeader("Content-type", "application/json");
+      xhr.onreadystatechange = function () {
+          console.log(xhr.readyState);
+          console.log(xhr.status);
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            // Turn the response into something we can use
+            var json = JSON.parse(xhr.responseText);
+
+            // Store the token in a cookie
+            var inFifteenMinutes = new Date(new Date().getTime() + 15 * 60 * 1000);
+            Cookies.set('auth_token', json.token, { expires: inFifteenMinutes });
+
+            // Redirect to the video viewer
+            window.location.replace('/video');
+          }
+          else if (xhr.readyState === 4 && xhr.status === 400) {
+            // Turn the response into something we can use
+            var json = JSON.parse(xhr.responseText);
+
+            document.getElementById("error").innerHTML = json.message;
+          }
+      };
+      var data = JSON.stringify({"username": username, "password": password});
+      xhr.send(data);
+    }
+  </script>
 </html>
