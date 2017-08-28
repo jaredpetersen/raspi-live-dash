@@ -31,7 +31,7 @@
             Cookies.set('auth_token', json.token, { expires: inFifteenMinutes });
 
             // Redirect to the video viewer
-            window.location.replace('/video');
+            window.location.replace('/cameras');
           }
           else if (xhr.readyState === 4 && xhr.status === 400) {
             // Turn the response into something we can use
